@@ -30,11 +30,18 @@ public class GameBoard {
                 "images/snowball_small.png"));
 
         // Large snowball
-        pieces.add(new Piece(
-                3,
-                4,
-                "large",
-                "images/snowball_large.png"));
+         pieces.add(new Piece(
+        3,
+        4,
+        "large",
+        "images/snowball_large.png"));
+
+// Tree obstacle
+          pieces.add(new Piece(
+        1,
+        2,
+        "tree",
+        "images/tree.png"));
     }
 
     public ArrayList<Piece> getPieces() {
