@@ -1,62 +1,25 @@
-import java.util.Scanner;
+import javax.swing.JFrame;
 
 public class Main {
 
- public static void main(String[] args) {
+    public static void main(String[] args) {
 
-    
+        // Create game window
+        JFrame frame = new JFrame("Snow Problem");
 
-    // board 5x4
-    char[][] board = new char[4][5];
+        // Close game when window closes
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-    // fill with empty spaces
-     for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++) {
-                board[i][j] = '.';
-            }
-        }
+        // Add game panel to window
+        frame.add(new GamePanel());
 
-        // add some pieces (example level 1)
-        board[1][1] = 'T'; // tree
-        board[2][2] = 'S'; // small snowball
-        board[3][3] = 'H'; // head
+        // Fit window to correct size
+        frame.pack();
 
-Scanner input = new Scanner(System.in);
+        // Open window in center of screen
+        frame.setLocationRelativeTo(null);
 
-System.out.println("Move snowball (w/a/s/d): ");
-char move = input.next().charAt(0);
-
-int row = 2;
-int col = 2;
-
-// remove old position
-board[row][col] = '.';
-
-// move snowball
-if (move == 'w') {
-    row--;
-}
-else if (move == 's') {
-    row++;
-}
-else if (move == 'a') {
-    col--;
-}
-else if (move == 'd') {
-    col++;
-}
-
-// place new position
-board[row][col] = 'S';
-
- 
-
-        // print board
-       for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++) {
-                System.out.print(board[i][j] + " ");
-            }
-            System.out.println();
-        }
+        // Make window visible
+        frame.setVisible(true);
     }
 }
