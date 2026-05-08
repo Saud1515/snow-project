@@ -34,12 +34,10 @@ public class Piece {
         return imagePath;
     }
 
-    // Change row position
     public void setRow(int row) {
         this.row = row;
     }
 
-    // Change column position
     public void setCol(int col) {
         this.col = col;
     }

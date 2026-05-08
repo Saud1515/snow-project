@@ -13,8 +13,6 @@ public class GameBoard {
 
         pieces = new ArrayList<>();
 
-        // Level 1 setup
-
         // Blue head
         pieces.add(new Piece(
                 3,
@@ -25,23 +23,23 @@ public class GameBoard {
         // Small snowball
         pieces.add(new Piece(
                 0,
-                2,
+                4,
                 "small",
                 "images/snowball_small.png"));
 
         // Large snowball
-         pieces.add(new Piece(
-        3,
-        4,
-        "large",
-        "images/snowball_large.png"));
+        pieces.add(new Piece(
+                3,
+                4,
+                "large",
+                "images/snowball_large.png"));
 
-// Tree obstacle
-          pieces.add(new Piece(
-        1,
-        2,
-        "tree",
-        "images/tree.png"));
+        // Tree obstacle
+        pieces.add(new Piece(
+                1,
+                1,
+                "tree",
+                "images/tree.png"));
     }
 
     public ArrayList<Piece> getPieces() {

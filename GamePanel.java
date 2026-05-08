@@ -19,10 +19,10 @@ public class GamePanel extends JPanel {
         // Create board
         board = new GameBoard();
 
-        // Set window size
+        // Set panel size
         setPreferredSize(new Dimension(500, 400));
 
-        // Mouse click controls
+        // Mouse clicks
         addMouseListener(new MouseAdapter() {
 
             @Override
@@ -38,16 +38,12 @@ public class GamePanel extends JPanel {
 
         super.paintComponent(g);
 
-        // Draw board
         drawBoard(g);
-
-        // Draw all pieces
         drawPieces(g);
     }
 
     private void drawBoard(Graphics g) {
 
-        // Draw 5x4 board
         for (int row = 0; row < 4; row++) {
 
             for (int col = 0; col < 5; col++) {
@@ -58,11 +54,10 @@ public class GamePanel extends JPanel {
                 // Draw square
                 g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
 
-                // Load hole image
+                // Draw hole image
                 ImageIcon hole =
                         new ImageIcon("images/hole.png");
 
-                // Draw hole
                 g.drawImage(
                         hole.getImage(),
                         x + 25,
@@ -76,7 +71,6 @@ public class GamePanel extends JPanel {
 
     private void drawPieces(Graphics g) {
 
-        // Draw every piece
         for (Piece piece : board.getPieces()) {
 
             int x = piece.getCol() * CELL_SIZE;
@@ -107,13 +101,12 @@ public class GamePanel extends JPanel {
 
             for (Piece piece : board.getPieces()) {
 
-                if (piece.getRow() == row &&
+                if (piece.getRow() == row
+                        &&
                         piece.getCol() == col) {
 
-                    // Only snowballs can move
-                    if (!piece.getType().equals("head")
-                            &&
-                            !piece.getType().equals("tree")) {
+                    // Trees cannot move
+                    if (!piece.getType().equals("tree")) {
 
                         selectedPiece = piece;
                     }
@@ -121,28 +114,28 @@ public class GamePanel extends JPanel {
             }
         }
 
-        // Move selected piece
+        // Move piece
         else {
 
             int dx = 0;
             int dy = 0;
 
-            // Move right
+            // Right
             if (col > selectedPiece.getCol()) {
                 dx = 1;
             }
 
-            // Move left
+            // Left
             else if (col < selectedPiece.getCol()) {
                 dx = -1;
             }
 
-            // Move down
+            // Down
             else if (row > selectedPiece.getRow()) {
                 dy = 1;
             }
 
-            // Move up
+            // Up
             else if (row < selectedPiece.getRow()) {
                 dy = -1;
             }
@@ -157,49 +150,91 @@ public class GamePanel extends JPanel {
 
     private void movePiece(Piece piece, int dx, int dy) {
 
-    int newRow = piece.getRow();
-    int newCol = piece.getCol();
+        int currentRow = piece.getRow();
+        int currentCol = piece.getCol();
 
-    while (true) {
+        while (true) {
 
-        newRow += dy;
-        newCol += dx;
+            int nextRow = currentRow + dy;
+            int nextCol = currentCol + dx;
 
-        // Check outside board
-        if (newRow < 0 || newRow >= 4
-                || newCol < 0 || newCol >= 5) {
+            // Outside board
+            if (nextRow < 0 || nextRow >= 4
+                    ||
+                    nextCol < 0 || nextCol >= 5) {
 
-            board.getPieces().remove(piece);
+                board.getPieces().remove(piece);
 
-            return;
-        }
-
-        boolean blocked = false;
-
-        // Check collision
-        for (Piece other : board.getPieces()) {
-
-            if (other != piece
-                    &&
-                    other.getRow() == newRow
-                    &&
-                    other.getCol() == newCol) {
-
-                blocked = true;
-                break;
+                return;
             }
-        }
 
-        // Stop before obstacle
-        if (blocked) {
+            Piece hitPiece = null;
 
-            break;
+            // Collision check
+            for (Piece other : board.getPieces()) {
+
+                if (other != piece
+                        &&
+                        other.getRow() == nextRow
+                        &&
+                        other.getCol() == nextCol) {
+
+                    hitPiece = other;
+                    break;
+                }
+            }
+
+            // Piece collision
+            if (hitPiece != null) {
+
+                // Small + large = stack
+                if (piece.getType().equals("small")
+                        &&
+                        hitPiece.getType().equals("large")) {
+
+                    board.getPieces().remove(piece);
+                    board.getPieces().remove(hitPiece);
+
+                    board.getPieces().add(new Piece(
+                            hitPiece.getRow(),
+                            hitPiece.getCol(),
+                            "stack",
+                            "images/snowman_stack.png"));
+
+                    return;
+                }
+
+                // Head + stack = complete snowman
+                if (piece.getType().equals("head")
+                        &&
+                        hitPiece.getType().equals("stack")) {
+
+                    board.getPieces().remove(piece);
+                    board.getPieces().remove(hitPiece);
+
+                    board.getPieces().add(new Piece(
+                            hitPiece.getRow(),
+                            hitPiece.getCol(),
+                            "snowman",
+                            "images/snowman_blue.png"));
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "You Win!");
+
+                    return;
+                }
+
+                // Stop before obstacle
+                piece.setRow(currentRow);
+                piece.setCol(currentCol);
+
+                return;
+            }
+
+            // Continue moving
+            currentRow = nextRow;
+            currentCol = nextCol;
         }
     }
-
-    // Final position
-    piece.setRow(newRow - dy);
-    piece.setCol(newCol - dx);
 }
-}
-
